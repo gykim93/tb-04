@@ -1,21 +1,21 @@
-package com.ll;
+package com.ll.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    Scanner scanner;
-    int lastQuotationId;
-    List<Quotation> quotations;
+    private Scanner scanner;
+    private int lastQuotationId;
+    private List<Quotation> quotations;
 
-    App() {
+    public App() {
         scanner = new Scanner(System.in);
         lastQuotationId = 0;
         quotations = new ArrayList<>();
     }
 
-    void run() {
+    public void run() {
         System.out.println("== 명언 앱 ==");
 
         while (true) {
@@ -25,9 +25,9 @@ public class App {
 
             Rq rq = new Rq(cmd);
 
-            switch (rq.getAction()){
+            switch (rq.getAction()) {
                 case "종료":
-                return;
+                    return;
                 case "등록":
                     actionWrite();
                     break;
@@ -44,7 +44,7 @@ public class App {
         }
     }
 
-    void actionWrite() {
+    private void actionWrite() {
         System.out.print("명언 : ");
         String content = scanner.nextLine();
 
@@ -60,7 +60,7 @@ public class App {
         System.out.printf("%d번 명언이 등록되었습니다.\n", lastQuotationId);
     }
 
-    void actionList() {
+    private void actionList() {
         System.out.println("번호 / 작가 / 명언");
 
         System.out.println("----------------------");
@@ -74,38 +74,46 @@ public class App {
         }
     }
 
-    void actionRemove(Rq rq) {
+    private void actionRemove(Rq rq) {
         int id = rq.getParamAsInt("id", 0);
-        if(id == 0){
-            System.out.println("id를 정확히 입력해주세요.");
-            return; //함수를 끝낸다.
-        }
-        int index = getIndexOfQuotatinById(id);
 
-        if (index == -1){
+        if (id == 0) {
+            System.out.println("id를 정확히 입력해주세요.");
+            return; // 함수를 끝낸다.
+        }
+
+        int index = findQuotationIndexById(id);
+
+        if (index == -1) {
             System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
             return;
         }
+
         quotations.remove(index);
 
-        System.out.printf("%d번 명언을 삭제합니다.\n", id);
+        System.out.printf("%d번 명언을 삭제되었습니다.\n", id);
     }
-    int getIndexOfQuotatinById(int id){
-        for (int i = 0; i < quotations.size(); i++){
+
+    private int findQuotationIndexById(int id) {
+        for (int i = 0; i < quotations.size(); i++) {
             Quotation quotation = quotations.get(i);
 
-            if (quotation.id == id){
+            if (quotation.id == id) {
                 return i;
             }
         }
+
         return -1;
     }
-    void actionModify(Rq rq) {
+
+    private void actionModify(Rq rq) {
         int id = rq.getParamAsInt("id", 0);
-        if(id == 0){
+
+        if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
-            return; //함수를 끝낸다.
+            return; // 함수를 끝낸다.
         }
+
         System.out.printf("%d번 명언을 수정합니다.\n", id);
     }
 }
